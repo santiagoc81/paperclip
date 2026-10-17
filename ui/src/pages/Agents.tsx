@@ -38,6 +38,7 @@ import {
 import { usePublishSharedQueryData, useSharedPollingQuery } from "../hooks/useSharedPolling";
 
 import { getAdapterLabel } from "../adapters/adapter-display-registry";
+import { tEs } from "@/i18n-es-ar/overlay";
 
 const roleLabels = AGENT_ROLE_LABELS as Record<string, string>;
 
@@ -53,9 +54,9 @@ export const AGENT_FILTER_TABS = ["all", "active", "paused", "error", "builtin"]
 type FilterTab = (typeof AGENT_FILTER_TABS)[number];
 
 const AGENT_FILTER_TAB_ITEMS: { value: FilterTab; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "active", label: "Active" },
-  { value: "paused", label: "Paused" },
+  { value: "all", label: tEs("agents.filter.all", "All") },
+  { value: "active", label: tEs("agents.filter.active", "Active") },
+  { value: "paused", label: tEs("agents.filter.paused", "Paused") },
   { value: "error", label: "Error" },
   { value: "builtin", label: "Built-in" },
 ];
