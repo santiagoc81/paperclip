@@ -32,3 +32,29 @@ Los commits del corte anterior ya están en `master`, así que no hace falta che
 ## Después del merge
 
 La app se actualiza cuando la imagen se reconstruye desde `master`. Ese paso lo corre el dueño en el NAS: `docker compose` vive fuera del contenedor donde corren los agentes.
+
+## Confirmado por el dueño (17/10/2026, 06:36Z)
+
+Las dos incógnitas que quedaban del camino de entrega están cerradas:
+
+1. **La rama que se despliega es `master`** de este fork. El fork no tiene `main`.
+2. **La imagen se construye en el NAS desde el repo**, no se baja la oficial de `paperclipai`.
+
+O sea: **merge a `master` + reconstrucción en el NAS = app en castellano.** No hace falta publicar una imagen propia ni activar el workflow `docker.yml` del fork (que, verificado, nunca corrió: el fork tiene 0 ejecuciones de Actions). Tampoco hace falta montar nada sobre el contenedor.
+
+### El build por defecto se verificó de punta a punta
+
+La nota de entorno de [CHA-22](CHA-22-canal-de-entrega.md) quedó con el build sin terminar en este worktree. Se corrió completo el 17/10 a las 19:42Z sobre `es-ar/entrega-master` (HEAD `9c6910526`), con control negativo:
+
+| Comando | Marca del overlay en el `dist` |
+|---|---|
+| `pnpm --filter @paperclipai/ui build` — el del `Dockerfile` | **presente** (`"code","pre"` en `assets/agent-avatar-url-*.js`) |
+| `vite build --config vite.config.ts` — upstream | **ausente** |
+
+Las dos salidas tienen cadenas en castellano, porque el diccionario entra al bundle por el selector de idioma con overlay o sin él: por eso el veredicto es la marca del shim, no el grep de castellano. El control negativo confirma que la marca distingue un build del otro.
+
+### Tests del overlay en la rama de entrega (17/10, 19:44Z)
+
+56 en verde: 49 con la config de upstream (8 salteados) + 7 que renderizan componentes reales con `vitest.config.es-ar.ts`.
+
+**Hay que correrlos con `--no-file-parallelism`.** En paralelo, `overlay.dom.test.tsx` falla de forma intermitente y distinta en cada corrida (dos veces por `testTimeout` de 5 s, una con `blocked` sin traducir). El archivo solo, aislado, pasa 17/17 tres veces seguidas. Es contención entre archivos que recargan el módulo del overlay, no una regresión: queda anotado en CHA-28 para que QA lo endurezca.
