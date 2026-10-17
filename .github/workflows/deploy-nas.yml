@@ -1,0 +1,76 @@
+name: Build and deploy Paperclip to NAS
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: paperclip-nas-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'santiagoc81/paperclip'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build production image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: production
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/santiagoc81/paperclip:sha-${{ github.sha }}
+          build-args: |
+            PAPERCLIP_BUILD_COMMIT=${{ github.sha }}
+            PAPERCLIP_BUILD_VERSION=nas-${{ github.sha }}
+          cache-from: type=gha,scope=paperclip-nas
+          cache-to: type=gha,mode=max,scope=paperclip-nas
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: nas-production
+    permissions:
+      contents: read
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:github-deploy
+          ping: 100.90.156.101
+      - name: Deploy exact image to NAS
+        env:
+          NAS_SSH_KEY: ${{ secrets.NAS_SSH_KEY }}
+          NAS_KNOWN_HOSTS: ${{ secrets.NAS_KNOWN_HOSTS }}
+          IMAGE_DIGEST: ${{ needs.build.outputs.digest }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$NAS_SSH_KEY" > ~/.ssh/nas_deploy
+          chmod 600 ~/.ssh/nas_deploy
+          printf '%s\n' "$NAS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=30 \
+            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+            -i ~/.ssh/nas_deploy chanchu@100.90.156.101 \
+            "sudo -n /share/Container/paperclip-deploy/deploy.sh '$IMAGE_DIGEST'"
