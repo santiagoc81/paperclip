@@ -14,7 +14,7 @@ El `master` del fork sí es la rama de la que se reconstruye la app, así que es
 ## Las dos condiciones de un corte entregado
 
 1. **Mergeado en `master`** por PR, con los tests del overlay en verde.
-2. **El build por defecto produce es-AR.** El `Dockerfile` corre `pnpm --filter @paperclipai/ui build`; si ese comando no aplica el overlay, mergear el código no cambia nada de lo que el dueño ve. Ver la nota de decisión del canal de entrega (CHA-22).
+2. **El build por defecto produce es-AR.** El `Dockerfile` corre `pnpm --filter @paperclipai/ui build`; si ese comando no aplica el overlay, mergear el código no cambia nada de lo que el dueño ve. Resuelto en [CHA-22](CHA-22-canal-de-entrega.md): `ui/vite.config.mjs` gana por precedencia sobre `vite.config.ts` y le agrega el plugin del overlay al build por defecto, sin tocar un archivo de upstream.
 
 Si falta la segunda, el merge es una promesa vacía: código en `master`, app en inglés.
 
