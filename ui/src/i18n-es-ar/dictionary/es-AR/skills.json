@@ -375,5 +375,10 @@
   "· Latest": "· Última",
   "· executable": "· ejecutable",
   "· referenced in": "· referenciado en",
-  "Last attempt {0}": "Último intento {0}"
+  "Last attempt {0}": "Último intento {0}",
+
+  "Discover": "Descubrir",
+  "Not enabled for any agents": "Sin habilitar para ningún agente",
+  "Skills you create, edit, and test.": "Las skills que creás, editás y probás.",
+  "Sources": "Orígenes"
 }
