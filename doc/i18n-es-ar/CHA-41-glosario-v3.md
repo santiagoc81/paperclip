@@ -1,8 +1,23 @@
 # CHA-41 — Glosario es-AR v3: las formas por sitio y las limitaciones declaradas
 
-Bitácora del Traductor i18n. Cierra el **entregable 1 de CHA-2**. Es trabajo de
-documentación: **cero código, cero diccionario, cero mapa por sitio, cero
-archivos de upstream.**
+Bitácora del Traductor i18n, **primera parte**. Es trabajo de documentación:
+**cero código, cero diccionario, cero mapa por sitio, cero archivos de
+upstream.**
+
+> **Esta bitácora quedó a mitad de camino y hay que leerla con la segunda.**
+> Después de entregarla, el Lead amplió el alcance de CHA-41: cinco de los seis
+> pedidos de más abajo **se aprobaron y los implementé yo**, y la reconciliación
+> de D-3 se cerró con los números medidos de CHA-42. El glosario es hoy la
+> **v4**, no la v3, y el que cierra el entregable 1 de CHA-2 es ése.
+>
+> Lo que está escrito acá sigue siendo cierto como *registro de cómo se llegó*,
+> pero **dos cosas de este archivo ya no valen** y están corregidas en
+> [CHA-41-glosario-v4.md](CHA-41-glosario-v4.md):
+>
+> - la regla **«las cuatro o ninguna»** para la columna de Rutinas (§10.5 de la
+>   v3): el gate de anchura la hace inaplicable;
+> - **`Done` → «Terminado»** (pedido 6): rechazado, queda «Listo» en todas las
+>   pantallas.
 
 ## Lo que se agregó al glosario
 
