@@ -55,12 +55,34 @@ const HOMOGRAFOS = [
  * suspensivos. Las formas de acá entran en la caja; la tabla medida está en
  * `doc/i18n-es-ar/CHA-42-tres-defectos.md`.
  *
- * `Off` es el caso que **no** tiene forma: «Apagada», la que eligió el Lead,
- * mide 53 px. La entrada es `"Off": "Off"`, o sea inglés a propósito en este
- * sitio, que es la salida que pidió la tarea: antes una palabra en inglés que
- * una palabra cortada.
+ * `Off` tiene forma y es «Inactiva» (CHA-41). «Apagada», la que había elegido
+ * el Lead, mide 53 px y no entra; «Inactiva» mide **45** en la misma tabla, así
+ * que el gate la deja pasar. La entrada de identidad `"Off": "Off"` que dejó
+ * CHA-42 era la salida correcta *mientras la única candidata fuera «Apagada»*:
+ * con una forma que entra, dejar inglés en el medio de la columna es peor —la
+ * misma lista diría «Activa» para unas rutinas y `Off` para otras—.
+ *
+ * `Draft` es el que sigue sin forma: «Borrador» mide 51 px y cortado queda
+ * «Borrado», que dice algo falso. Queda en inglés y no tiene entrada.
  */
 const POR_ANCHO = ["Archived", "Off", "On"] as const;
+
+/**
+ * La cuarta clase, de CHA-41: el sitio **sí** se traduce hoy, pero con la forma
+ * equivocada, o no se traduce y el global no existe. No separan dos sentidos
+ * —eso es `HOMOGRAFOS`— ni pelean contra una caja —eso es `POR_ANCHO`—.
+ *
+ * - `Blocked`: el global «Bloqueada» es el chip de **una** tarea; acá rotula la
+ *   pestaña que filtra **las** tareas bloqueadas de la bandeja. El global queda
+ *   intacto.
+ * - `Installed`: el global «Instaladas» es de skills (`skills.json`); el badge
+ *   de `TeamCatalog.tsx:739` es **un equipo**, o sea género y número al revés.
+ *   Es la novena homógrafa y la hermana de `Installed ·`, que ya estaba.
+ * - `Open Settings`: no tiene global. Es la otra rama del mismo ternario que
+ *   `Review` en `PluginManager.tsx:326`, así que con una lista de plugins
+ *   mezclada se ven las dos ramas a la vez, una en cada idioma.
+ */
+const POR_FORMA_CHA41 = ["Blocked", "Installed", "Open Settings"] as const;
 
 /**
  * El homógrafo que encontró CHA-43 midiendo la cola de §6.3 de CHA-36.
@@ -79,7 +101,12 @@ const POR_ANCHO = ["Archived", "Off", "On"] as const;
  */
 const HOMOGRAFOS_CHA43 = ["Author"] as const;
 
-const CADENAS = [...HOMOGRAFOS, ...POR_ANCHO, ...HOMOGRAFOS_CHA43] as const;
+const CADENAS = [
+  ...HOMOGRAFOS,
+  ...POR_ANCHO,
+  ...HOMOGRAFOS_CHA43,
+  ...POR_FORMA_CHA41,
+] as const;
 
 /**
  * Una fila por cadena: el mismo inglés, dos archivos, dos españoles.
@@ -162,7 +189,7 @@ describe("el mismo inglés, dos españoles según el archivo (§14.2)", () => {
     expect(lookup("Author")).toBe("Autor");
   });
 
-  it("cubre las 12 cadenas y ninguna más", () => {
+  it("cubre las 15 cadenas y ninguna más", () => {
     const cubiertas = new Set<string>();
     for (const porIngles of entradasPorSitio("es-AR").values()) {
       for (const ingles of porIngles.keys()) cubiertas.add(ingles);
@@ -183,16 +210,68 @@ describe("la columna de 48 px de la lista de Rutinas (CHA-42)", () => {
     expect(lookup("Archived")).toBe("En archivo");
   });
 
-  it("`Off` queda en inglés acá y sigue siendo «Desactivado» en el resto", () => {
-    // La regla medida: lo que pasa de 48 px no entra. «Apagada» mide 53 px.
-    expect(lookupPorSitio("Off", ARCHIVO)).toBe("Off");
+  it("`Off` es «Inactiva» acá y sigue siendo «Desactivado» en el resto (CHA-41)", () => {
+    // La regla medida: lo que pasa de 48 px no entra. «Apagada» mide 53 y
+    // queda afuera; «Inactiva» mide 45 y entra, así que la columna no tiene
+    // que quedarse a medio traducir. Tabla en CHA-42-tres-defectos.md §3.
+    expect(lookupPorSitio("Off", ARCHIVO)).toBe("Inactiva");
     expect(lookup("Off")).toBe("Desactivado");
     expect(lookupPorSitio("Off", SIN_ENTRADA_EN_EL_MAPA)).toBe("Desactivado");
+  });
+
+  it("las tres formas de la columna entran en 48 px y ninguna se corta", () => {
+    // El gate, dicho como aserción sobre las formas elegidas y no sobre los
+    // píxeles: medir es de QA, pero la lista de lo que se aceptó es de acá.
+    expect(
+      [
+        lookupPorSitio("On", ARCHIVO),
+        lookupPorSitio("Off", ARCHIVO),
+        lookupPorSitio("Archived", ARCHIVO),
+      ],
+      "las formas medidas: Activa 36 px, Inactiva 45 px, Archivo 44 px",
+    ).toEqual(["Activa", "Inactiva", "Archivo"]);
   });
 
   it("`Draft` no tiene entrada en ningún lado y sale en inglés", () => {
     expect(lookup("Draft")).toBe("Draft");
     expect(lookupPorSitio("Draft", ARCHIVO)).toBe("Draft");
+  });
+});
+
+describe("las tres formas que el repaso del glosario corrigió (CHA-41)", () => {
+  it("`Blocked`: «Bloqueadas» la pestaña, «Bloqueada» la tarea", () => {
+    // El global rotula el chip de **una** tarea y no se toca; las dos bandejas
+    // filtran **las** tareas bloqueadas, así que ahí va el plural.
+    expect(lookupPorSitio("Blocked", "pages/Inbox.tsx")).toBe("Bloqueadas");
+    expect(lookupPorSitio("Blocked", "pages/LegacyInbox.tsx")).toBe("Bloqueadas");
+    expect(lookup("Blocked")).toBe("Bloqueada");
+  });
+
+  it("`Installed`: «Instalado» el equipo, «Instaladas» las skills", () => {
+    // La novena homógrafa, hermana de `Installed ·`. El badge de
+    // `TeamCatalog.tsx:739` es un equipo: masculino singular.
+    expect(lookupPorSitio("Installed", "pages/TeamCatalog.tsx")).toBe("Instalado");
+    expect(lookup("Installed")).toBe("Instaladas");
+    // Y la hermana con `·` sigue resolviendo aparte: son dos claves distintas
+    // en el mismo archivo y el mapa busca por igualdad exacta, no por prefijo.
+    expect(lookupPorSitio("Installed ·", "pages/TeamCatalog.tsx")).toBe("Instalados ·");
+  });
+
+  it("`Open Settings`: la otra rama del ternario de «Revisar»", () => {
+    // `PluginManager.tsx:326` elige entre las dos según el estado del plugin,
+    // así que con una lista mezclada se ven las dos a la vez. Sin global.
+    expect(lookupPorSitio("Open Settings", "pages/PluginManager.tsx")).toBe(
+      "Abrir la configuración",
+    );
+    expect(lookupPorSitio("Review", "pages/PluginManager.tsx")).toBe("Revisar");
+    expect(lookup("Open Settings")).toBe("Open Settings");
+  });
+
+  it("`All` en Búsqueda es «Todos», y no se contamina con las bandejas", () => {
+    // §9.3: el sustantivo elidido son «los ámbitos» (`All scopes` → «Todos los
+    // ámbitos»). El sitio es `SCOPE_LABELS`, un `const`, no un `return`.
+    expect(lookupPorSitio("All", "pages/Search.tsx")).toBe("Todos");
+    expect(lookupPorSitio("All", "pages/Inbox.tsx")).toBe("Todas");
   });
 });
 
@@ -263,8 +342,20 @@ describe("la garantía del dueño: por qué estas 7 no van al diccionario global
    * llegar por la ventana de atrás a ningún sitio derivado. Con eso, el sentido
    * común —la persona— puede vivir en el global y el mapa desvía nada más que
    * la sección de Skills.
+   *
+   * `Blocked` e `Installed` (CHA-41) son la cuarta: el global existe, es
+   * correcto para el resto de la app y **tiene que quedarse**. Lo que el mapa
+   * arregla es un sitio donde ese global concuerda mal —«Bloqueada» la tarea
+   * vs. la pestaña que filtra tareas, «Instaladas» las skills vs. el badge de
+   * un equipo—. `Open Settings` no tiene global y por eso sí entra abajo.
    */
-  const CON_GLOBAL_A_PROPOSITO = new Set(["Review", ...POR_ANCHO, ...HOMOGRAFOS_CHA43]);
+  const CON_GLOBAL_A_PROPOSITO = new Set<string>([
+    "Review",
+    ...POR_ANCHO,
+    ...HOMOGRAFOS_CHA43,
+    "Blocked",
+    "Installed",
+  ]);
 
   it("ninguna de las 8 tiene entrada en el diccionario global", () => {
     for (const ingles of CADENAS) {

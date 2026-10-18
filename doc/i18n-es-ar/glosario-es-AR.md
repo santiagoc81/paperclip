@@ -1,6 +1,6 @@
 # Glosario es-AR para la interfaz de Paperclip
 
-**Versión 3.** Este archivo es **el original**: nació como documento de Paperclip
+**Versión 4.** Este archivo es **el original**: nació como documento de Paperclip
 en CHA-1 y desde CHA-21 (corte 2) vive acá. El documento de Paperclip queda como
 registro histórico; lo que manda es este archivo.
 
@@ -38,6 +38,24 @@ cierra el entregable con lo que eso dejó decidido:
   una con su motivo. Hasta ahora vivían repartidas en cinco bitácoras.
 - §3 y §5 siguen tal cual: el mapa por sitio **no reemplaza** ninguna decisión
   anterior, le agrega la dimensión del archivo a ocho cadenas.
+
+## Cambios respecto de la v3
+
+La v3 se escribió **antes** de que CHA-42 midiera la columna de Rutinas y de
+que CHA-43 cerrara la cola de 41 cadenas, así que dejó cinco formas como
+«apuntadas y no cerradas». La v4 las cierra y da de alta lo que esas dos
+tareas encontraron. **Esta es la versión que entrega CHA-2.**
+
+- §9 crece de 8 cadenas a **15**: `Author` (CHA-43, §9.4) y las tres de §9.5
+  —`Blocked`, `Installed`, `Open Settings`—, que son una **cuarta clase** de
+  entrada por sitio: no separan dos sentidos ni pelean contra una caja, le
+  corrigen la concordancia a un global que es correcto en el resto de la app.
+- §10.5 deja de ser una lista de pendientes: ahora son **decisiones cerradas
+  con el número medido al lado**, incluidas las dos que el gate de anchura
+  rechazó (`Draft` y `Archivada`) y la limitación que eso deja declarada.
+- §5 incorpora `Done` → «Listo» como decisión explícita, para que no se vuelva
+  a abrir.
+- §9.3 pasa de decisión a hecho: `All` en Búsqueda ya tiene su línea en el mapa.
 
 ## 1. Reglas de estilo
 
@@ -277,6 +295,24 @@ encabeza en pantalla («Estado de la membresía: Activo»).
 
 Los botones que mandan a otra pantalla llevan artículo: «Abrir Miembros»,
 «Administrar la conexión», «Volver a los entornos».
+
+### `Done` es «Listo» en todas las pantallas, y no es negociable (CHA-41)
+
+`Done` aparece como **botón**, como **estado de una tarea** y como **opción de
+filtro** (`ActivityFeed.tsx:119`, junto a «En curso» y «En revisión»). En las
+tres va **«Listo»**, el mismo español, sin excepción por pantalla.
+
+Queda escrito acá porque ya se intentó abrir una vez: en el repaso del mapa
+propuse «Terminado» para el filtro de actividad, por coherencia con sus
+hermanos de esa pantalla, y **se rechazó con razón**. El defecto que el dueño
+reportó en el corte 1 —y que CHA-15 arregló unificando en «Listo»— era
+exactamente éste: *el mismo estado con dos nombres según dónde lo mirás*. La
+coherencia **entre** pantallas gana sobre la coherencia **dentro** de una
+pantalla, porque es la que el usuario nota cuando navega.
+
+Es la contracara de §9: ahí el mapa por sitio existe para dar dos españoles
+cuando el inglés tiene **dos sentidos**. `Done` tiene uno solo, así que el
+mapa no aplica.
 
 **Cinco botones de esta sección no tienen una sola forma** porque la misma
 palabra inglesa es sustantivo en otra pantalla: `Open`, `Run`, `Comment`,
@@ -773,9 +809,20 @@ reales del JSX, no leyendo el código a ojo.
 Desde CHA-38 hay un segundo canal de traducción: el **mapa por sitio**,
 `ui/src/i18n-es-ar/dictionary/por-sitio/es-AR.json`, con clave
 **`archivo + inglés`** (la ruta relativa a `ui/src/`, sin el número de línea, así
-sobrevive a que upstream edite el archivo más arriba). Hoy tiene **51 archivos,
-58 entradas y 8 cadenas**, y el reparto archivo por archivo está en
+sobrevive a que upstream edite el archivo más arriba). Nació con **8 cadenas**
+en CHA-38 y hoy tiene **54 archivos, 67 entradas y 15 cadenas**; el reparto
+archivo por archivo de las ocho originales está en
 [CHA-38](CHA-38-mapa-por-sitio.md).
+
+Las 15 no son todas la misma cosa, y confundirlas es el error que más caro
+sale. Son **cuatro clases**, y cada una tiene su propia regla:
+
+| Clase | Cuáles | Por qué hay una entrada por sitio |
+|---|---|---|
+| **1. Dos sentidos** (§9.1) | `All`, `Private`, `Installed ·`, `Open`, `Run`, `Comment`, `Review`, `Type` | el inglés es un homógrafo y el español no: hacen falta dos palabras |
+| **2. No entra en la caja** (§10.5) | `On`, `Off`, `Archived` | un solo sentido, pero el español global no cabe en un ancho fijo de upstream |
+| **3. Dos sentidos, uno global** (§9.4) | `Author` | ídem clase 1, pero el sentido común vive en el global y el mapa desvía un solo sitio |
+| **4. Concordancia** (§9.5) | `Blocked`, `Installed`, `Open Settings` | el global es correcto en el resto de la app y concuerda mal en un sitio |
 
 **Esta sección reemplaza tres reglas de §7** —la 3 de CHA-27, la 1 de CHA-31 y
 la 2 de CHA-33—, que decían «no entra» para estas ocho cadenas porque el
@@ -812,7 +859,7 @@ Dos aclaraciones que evitan volver a discutirlas:
 
 - **El plural no siempre es homógrafo.** `Comments` → «Comentarios» es entrada
   **global** (CHA-39): sus tres sitios son el sustantivo plural. El homógrafo es
-  el singular. Lo mismo vale al revés para `Installed`, ver §10.5.
+  el singular. Lo mismo vale al revés para `Installed`, ver §9.5.
 - **«Revisar» para los dos botones queda confirmado** (CHA-41). Es la única de
   las ocho formas que no salió de una bitácora de traducción —la propuso Dev UX/UI
   en CHA-38 por analogía—, y la analogía es correcta: es la regla 3 de arriba,
@@ -850,7 +897,12 @@ concordancia y no de mecanismo. Las siete pestañas de Búsqueda son All, Tareas
 Comentarios, Documentos, Artefactos, Agentes y Proyectos: el sustantivo elidido
 es **«los ámbitos»** —así lo dice la cadena hermana, `All scopes` → «Todos los
 ámbitos»— y cinco de los seis hermanos son masculinos. Va **«Todos»**, con una
-línea en el mapa para `pages/Search.tsx`.
+línea en el mapa para `pages/Search.tsx`, **que ya está puesta** (CHA-41).
+
+El sitio es `SCOPE_LABELS`, o sea un `const`, no el `return` de una función: es
+justo la salvedad del párrafo de arriba, y es lo que hace que esta cadena se
+pueda resolver por archivo. Antes de esta línea la primera pestaña de Búsqueda
+salía en inglés, porque `All` no tiene —ni puede tener— entrada global.
 
 ### 9.4 `Author`: «Autoría» la sección, «Autor» la persona (CHA-43)
 
@@ -873,10 +925,53 @@ riesgo que §9.2 existe para evitar—. Ventaja de repartirlo así: si upstream
 renombra `SkillsContextualSidebar.tsx`, el encabezado cae a «Autor», o sea se
 degrada a **español**, no a inglés.
 
+### 9.5 La cuarta clase: el global está bien y concuerda mal en un sitio (CHA-41)
+
+Las tres salieron de repasar las 58 entradas del mapa contra el código, y
+ninguna es un homógrafo: el inglés tiene **un solo sentido**. Lo que falla es
+la **concordancia** —género, número— entre un global que es correcto para el
+resto de la app y el sustantivo que ese sitio en particular rotula.
+
+| Inglés | Global | Por sitio | Dónde y por qué |
+|---|---|---|---|
+| `Blocked` | **Bloqueada** (`common.json`) | **Bloqueadas** | `pages/Inbox.tsx` y `pages/LegacyInbox.tsx`. El global rotula el chip de **una** tarea; acá es la pestaña que filtra **las** tareas bloqueadas, al lado de «Mías / Recientes / Sin leer / Todas» |
+| `Installed` | **Instaladas** (`skills.json`) | **Instalado** | `pages/TeamCatalog.tsx:739`. El global es de skills; ese badge es **un equipo**, o sea género *y* número al revés. Es la hermana de `Installed ·`, que CHA-38 sí había mapeado |
+| `Open Settings` | *(no tiene)* | **Abrir la configuración** | `pages/PluginManager.tsx:326`. No es concordancia sino hueco, pero entra acá por el mismo motivo práctico: es la **otra rama del ternario** de `Review`, así que con una lista de plugins mezclada se ven las dos a la vez, una en cada idioma |
+
+**La regla para reconocer la clase:** si al leer el sitio te das cuenta de que
+el español global *diría algo cierto pero mal concordado*, es esta clase y se
+arregla con una línea del mapa. Si el español global *diría otra cosa*, es la
+clase 1 y hace falta decidir el discriminante primero (§9.1).
+
+**Lo que esta clase no habilita:** sacar el global. Las tres veces el global
+sirve donde está —«Bloqueada» para la tarea, «Instaladas» para las skills— y
+quitarlo dejaría en inglés media app para arreglar un rótulo. El mapa desvía
+un sitio; no reemplaza una decisión de §3 ni de §5.
+
+**`Installed` y `Installed ·` conviven en el mismo archivo**, y eso es seguro:
+`buscarPorSitio` resuelve por **igualdad exacta** sobre la cadena completa, con
+un único recorte de los espacios del borde (§8). No hay búsqueda por prefijo,
+así que la clave corta no se come a la larga ni al revés. Si alguna vez el
+mecanismo pasara a resolver por prefijo, estas dos son el primer caso que se
+rompe.
+
 ## 10. Limitaciones conocidas del corte 2
 
 Lo que **queda sin traducir a propósito**, con el motivo de cada caso. Están acá
 para que nadie las vuelva a "arreglar": cada intento ya se hizo y empeoraba algo.
+
+**Ésta es la lista única.** Si una cadena del corte 2 se ve en inglés en
+pantalla y no está acá, es deuda y se traduce; si está acá, hay un motivo
+escrito y volver a abrirla cuesta más de lo que arregla.
+
+| § | Qué queda afuera | Por qué, en una línea |
+|---|---|---|
+| 10.1 | 5 frases con interpolación | el overlay traduce trozo por trozo y no reordena |
+| 10.2 | `Type` y `Run`, 6 sitios | los dos sentidos viven en el **mismo** archivo y la clave del mapa no los separa |
+| 10.3 | la pantalla `Paperclip couldn’t start` | vive fuera de `ui/src`: traducirla costaría tocar upstream |
+| 10.4 | las 267 cadenas del alcance | clasificadas aparte, en `cierre-corte2.md` §3 |
+| 10.5 | `Draft` en la columna de Rutinas, y «Archivo» donde iría un adjetivo | el ancho fijo de 48 px es de upstream |
+| 10.6 | `working`, `active`, `paused`, `archived`, `My Projects` | tres causas de mecanismo distintas, ninguna de diccionario |
 
 ### 10.1 Orden de palabras: el overlay no reordena
 
@@ -941,48 +1036,69 @@ pantalla y que esa clasificación no nombra, en §6.3 de
 [CHA-36](CHA-36-validacion-cierre-corte2.md)—. No se repiten acá a propósito: la
 cuenta se mide, y una copia se desactualiza.
 
-### 10.5 Dos cosas que el corte 2 deja apuntadas y no cerradas
+### 10.5 El ancho fijo de la columna de Rutinas: tres de cuatro, y la cuarta en inglés
 
-No son limitaciones del mecanismo: son decisiones de forma que faltan, y las dos
-cuestan una línea del mapa.
+**Cerrado.** `RoutineList.tsx:188-190` muestra el estado de la rutina en un
+`<span className="w-12 text-xs text-muted-foreground">`: **48 px fijos**, y el
+archivo es de upstream, así que no se ensancha. El defecto D-3 de CHA-36 era
+que «Desactivado» —el español global de `Off`— ocupa 75 px y se corta a la
+mitad, sin puntos suspensivos.
 
-- **El span de 48 px de la lista de Rutinas** (`RoutineList.tsx:188-190`, el
-  defecto D-3 de CHA-36). Muestra `Archived | Draft | On | Off` en un `w-12`
-  fijo que no se puede ensanchar —es archivo de upstream—, y a 12 px de
-  tipografía entran unos **7 caracteres**. «Desactivado» mide 75 px y se corta a
-  la mitad. La decisión de glosario, por sitio y sin tocar el par global
-  «Activado / Desactivado» de §5:
+CHA-42 midió cada forma candidata sobre ese span real, con la tipografía del
+build. **La tabla completa está en [CHA-42](CHA-42-tres-defectos.md) §3**; lo
+que el glosario fija es el resultado:
 
-  | Inglés | Forma por sitio | Por qué |
-  |---|---|---|
-  | `On` | **Activa** | 6 caracteres. Femenino: el sujeto es la rutina, y el mapa es por archivo así que no desordena el par global de §5 |
-  | `Off` | **Inactiva** | 8 caracteres, pero angostos (dos `i` y una `t`): roza el borde y, si se corta, queda «Inactiv», que se lee. Va con `Inactive` → «Inactivo» de §3 |
-  | `Archived` | **Archivada** | hoy cae a «En archivo» (global, §3), que cortado queda «En archi». «Archivada» cortada queda «Archivad», que se lee. Es el adjetivo: **«Archivo» no sirve**, es un sustantivo y en esa columna se lee como un archivo de disco |
-  | `Draft` | **Borrador** | hoy no tiene entrada. **Es la única que hay que medir antes de poner**: si se corta a siete caracteres queda «Borrado», que es *otra palabra* y dice algo falso. Si no entra entera, ésta —y sólo ésta— se queda en inglés |
+| Inglés | Forma | px | Por qué |
+|---|---|---:|---|
+| `On` | **Activa** | 36 | entra holgada. Femenino: el sujeto es la rutina. El mapa es por archivo, así que no desordena el par global «Activado / Desactivado» de §5 |
+| `Off` | **Inactiva** | 45 | entra. Va con `Inactive` → «Inactivo» de §3. «Apagada» (53) se lee «Apagad» y quedó afuera |
+| `Archived` | **Archivo** | 44 | entra, y **arregla un recorte que ya existía en inglés**: `Archived` mide 52 px en una caja de 48. El global «En archivo» (43) entra pero **se parte en dos renglones** y le cambia el alto a la fila |
+| `Draft` | **inglés** | 29 | «Borrador» mide 51 y cortado queda «Borrado», que es *otra palabra* y dice algo falso. No tiene entrada en ningún lado |
 
-  Las cuatro juntas, y en ese orden de confianza. **Lo que no hay que hacer es
-  dejar la columna a medio traducir**: una entrada de identidad (`"Off": "Off"`)
-  entra en el mapa sin que ningún test la rebote —la guarda de «ninguna
-  traducción es idéntica al inglés» recorre `ES_AR_AREAS`, no el mapa— y deja la
-  columna diciendo «Activa» para unas rutinas y `Off` para otras. Eso es peor
-  que el recorte: es la regla 3 de CHA-34 en §7 («la coherencia de la pantalla
-  manda sobre la traducción de la cadena»), y acá se aplica entera o no se
-  aplica. Si al medir resulta que ni «Inactiva» ni «Archivada» entran, la salida
-  correcta es **las cuatro en inglés**, no dos y dos.
+**El gate, dicho como regla para la próxima vez:** en este sitio, la forma que
+pase de **48 px** no entra; se deja el inglés y se reporta el número. Medir es
+de QA y el arnés quedó documentado en CHA-42 §3. **Medí antes de cambiar una
+de estas cuatro.**
 
-  Las anchuras son de QA, no mías: el único número medido es el de CHA-36
-  («Desactivado» = 75 px en una caja de 48 px). Implementarlo es código: son
-  cuatro claves en una entrada del mapa, no mías.
+#### La limitación que esto deja declarada: «Archivo» es un sustantivo
 
-- **`Installed` sin el `·` es una novena homógrafa.** Tiene entrada global
-  «Instaladas» en `skills.json` y un sitio en `TeamCatalog.tsx:739`, que es el
-  badge de **un equipo**: ahí se lee «Instaladas», con el género *y* el número
-  equivocados. CHA-38 mapeó `Installed ·` y no esta, porque no estaba entre las
-  ocho. La forma es **«Instalado»** —un equipo, masculino singular— y va en la
-  entrada que `TeamCatalog.tsx` ya tiene en el mapa. Lo encontré leyendo el
-  diccionario y el código, **no corriendo `markText`**: quien lo implemente
-  conviene que confirme el sitio con el marcado primero, que es la lección de
-  método de CHA-30.
+`Archived` es un **adjetivo** —el estado de la rutina— y «Archivo» es un
+**sustantivo**. En esa columna se puede leer como *un archivo de disco*, que
+es un registro equivocado. El adjetivo correcto es «Archivada» y **mide 58 px**:
+cortada queda «Archiva», que además se lee como el verbo en imperativo.
+
+**No se arregla, se declara.** No hay forma castellana que sea adjetivo y entre
+en 48 px, y el ancho es de upstream. Si algún día ese span se ensancha, el
+cambio que corresponde es «Archivo» → «Archivada», y está escrito acá para que
+quien lo vea sepa que fue una concesión medida y no un descuido.
+
+#### Y la regla que esto derogó: «las cuatro o ninguna»
+
+La v3 de este glosario decía que las cuatro formas entraban juntas o ninguna,
+por coherencia de la columna. **Esa regla queda sin efecto**, y conviene saber
+por qué se escribió y por qué no sirve: se escribió *antes* de tener los
+números, y una vez que el gate de anchura está delante es inaplicable —no se
+puede pedir coherencia entre cuatro formas cuando una de las cuatro no cabe—.
+
+Lo que **sí** sobrevive de aquel razonamiento es el caso que lo motivaba: una
+entrada de identidad (`"Off": "Off"`) deja la columna diciendo «Activa» para
+unas rutinas y `Off` para otras, y **ningún test la rebota** —la guarda de
+«ninguna traducción es idéntica al inglés» recorre `ES_AR_AREAS`, no el mapa—.
+Eso sigue siendo lo peor que se puede hacer acá, y es exactamente lo que se
+evitó al poner «Inactiva». Tres de cuatro en castellano sin un solo recorte es
+mejor final que dos y dos.
+
+`Draft` queda en inglés y **no es lo mismo**: no tiene entrada, ni global ni
+por sitio, así que cae al inglés por el camino normal del mecanismo. Es una
+cadena sin traducir, no una traducción que dice «Draft».
+
+#### Lo que esta columna **no** arregla: `paused` y `archived` en minúscula
+
+Las mismas palabras aparecen en el mismo archivo en minúscula (`:138`) y
+**ésas no las toca nadie**, porque la regla de la comparación (§7.4) bloquea la
+cadena en ese archivo a propósito. Está explicado en §10.6 b). Vale leerlo
+junto con esta sección: en una misma lista, `On` se pudo arreglar y `paused` no,
+y la diferencia no se ve mirando la pantalla.
 
 ### 10.6 Tres clases que la cola de CHA-36 §6.3 agregó a esta lista (CHA-43)
 
