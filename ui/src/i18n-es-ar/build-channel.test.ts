@@ -15,7 +15,14 @@ import { describe, expect, it } from "vitest";
  */
 
 const UI_ROOT = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../..");
-const OVERLAY_PLUGIN = "paperclip-es-ar-overlay-jsx-runtime";
+/**
+ * El nombre del plugin cambió con CHA-23: el overlay en el runtime de JSX se
+ * reemplazó por marcado en compilación. Este test nació en el corte 1 y su
+ * constante quedó apuntando al plugin viejo, así que al traer el canal de
+ * entrega a la línea del corte 2 falló — bien, porque la propiedad que
+ * verifica es silenciosa.
+ */
+const OVERLAY_PLUGIN = "paperclip-es-ar-marcado-de-texto";
 
 /** Los plugins vienen anidados en arrays; `flat(Infinity)` hace explotar a tsc. */
 function pluginNames(plugins: unknown): string[] {
