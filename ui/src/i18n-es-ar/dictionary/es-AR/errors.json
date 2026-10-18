@@ -200,5 +200,8 @@
   "Model unavailable.": "El modelo no está disponible.",
   "No preview available": "No hay vista previa",
   "Preview unavailable.": "No hay vista previa.",
-  "Video preview unavailable": "No hay vista previa del video"
+  "Video preview unavailable": "No hay vista previa del video",
+  "Failed to fetch": "No se pudo conectar",
+  "The company spending limit was reached.": "Se alcanzó el límite de gasto de la empresa.",
+  "This cannot be undone.": "Esto no se puede deshacer."
 }
