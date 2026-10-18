@@ -710,6 +710,38 @@ escalada al dueño; hay un test que la fija — ver [CHA-15](CHA-15-nombres-de-e
 `Worktrees` y `Worktrees ·` (término de Git, §7) y `⌘K` y `⌘K:` (teclas, igual
 que `⌘S` en CHA-33).
 
+### Agregadas en CHA-43 (la cola medida de CHA-36 §6.3: 14 entradas)
+
+No son un lote: son la cola que QA midió **mirando la pantalla** en vez de
+contando el diccionario. Las 14 tenían sitio marcado **antes** de que escribiera
+la entrada —cruzado con el reporte de sitios, una por una—, así que ninguna es
+diccionario muerto. El detalle de las 41, con pantalla y causa, está en
+[CHA-43](CHA-43-cola-medida.md).
+
+| Inglés | es-AR | Nota |
+| --- | --- | --- |
+| Overview | Resumen | Ya estaba en §2 y **no estaba en el diccionario**. Un solo español alcanza para los 11 sitios: en Agentes, Rutinas, Skills, Costos, Casos y gateways es siempre la primera pestaña. Convive con `Summary` → «Resumen», que ya existía: dos ingleses, un español, que es la dirección permitida |
+| Tools | Herramientas | Consistente con «Permisos de las herramientas» (`settings.json`) |
+| Governance | **Gobernanza** | Forma nueva. Rotula la sección de la ficha de agente que agrupa Permisos / Confianza, API keys y Revisiones: no es «gobierno» (el órgano) sino la práctica. Hermanas: «Agente» y «Tiempo de ejecución». En pantalla se lee GOBERNANZA, y mide igual que `GOVERNANCE` |
+| Permissions / Trust | Permisos / Confianza | Las dos mitades ya estaban fijadas (`Permissions` → «Permisos» en `common.json`, `Trust (nivel)` → «Confianza» en CHA-32). La barra se conserva |
+| API Keys | **API keys** | «API key» queda en inglés y en minúscula desde CHA-33 («Las API keys le permiten…», «Crear una API key»). Acá sólo se normaliza la mayúscula del título |
+| Succeeded | **Salió bien** | Forma nueva, y **sin género** por la regla 2 de §7: la hermana de la misma leyenda es `Failed` → «Falló», que es un verbo. Rotula ejecuciones (f) en el Panel y decisiones (f) en el historial, pero una forma sin género no obliga a elegir si mañana rotula un `run` masculino |
+| Author | Autor / **Autoría** | Homógrafa nueva: ver §9.4 |
+| Discover | Descubrir | Consistente con «Discover skills» → «Descubrir skills» (CHA-31) |
+| Sources | Orígenes | Ya estaba en CHA-31 («Skill sources» → «Orígenes de skills»); los tres sitios son orígenes de skills |
+| Skills you create, edit, and test. | Las skills que creás, editás y probás. | Voseo, y «skills» en femenino como fija CHA-31 |
+| Not enabled for any agents | Sin habilitar para ningún agente | Rotula una skill. «Sin habilitar» y no «No habilitada» para no elegir género: la cadena hermana `Available to install` tampoco lo elige |
+| Loading audit links… | Cargando los enlaces de auditoría… | Molde de §6, igual que «Cargando la actividad de la rutina…» |
+| Delivery | Entrega | Consistente con «Delivered» → «Entregado» y «Advanced delivery settings» → «Configuración avanzada de la entrega» |
+| Images | Imágenes | Consistente con `Images ·` → «Imágenes ·» (`issues.json`) |
+
+Lo que **no entró** de esta cola, y ninguna por falta de forma: `Skills` y
+`Studio` quedan en inglés por CHA-31 (nombre del producto); `Claude Code` y
+`Local` por decisión del Lead (nombres propios, §7); `Videos` porque **es igual
+en es-AR** —«videos», sin tilde, que es la forma rioplatense— y una entrada
+`"Videos": "Videos"` sería diccionario muerto con otro nombre; y las que quedan
+por mecanismo, en §10.6.
+
 ## 8. Cadenas partidas y plurales contados
 
 Esto no es una regla de idioma: es cómo llega el texto al overlay, y define qué
@@ -819,6 +851,27 @@ Comentarios, Documentos, Artefactos, Agentes y Proyectos: el sustantivo elidido
 es **«los ámbitos»** —así lo dice la cadena hermana, `All scopes` → «Todos los
 ámbitos»— y cinco de los seis hermanos son masculinos. Va **«Todos»**, con una
 línea en el mapa para `pages/Search.tsx`.
+
+### 9.4 `Author`: «Autoría» la sección, «Autor» la persona (CHA-43)
+
+La novena homógrafa, y la encontró la cola de CHA-36 §6.3. Dos sentidos, dos
+archivos:
+
+- `components/SkillsContextualSidebar.tsx:61` rotula la **sección** de las
+  skills propias —abajo dice «Las skills que creás, editás y probás.» y después
+  «My Skills»—, o sea la acción de crearlas: **«Autoría»**. En pantalla se lee
+  AUTORÍA, porque el `uppercase` es CSS.
+- `pages/PluginSettings.tsx:208` rotula el dato `plugin.manifestJson.author`,
+  o sea una **persona**: **«Autor»**.
+
+Es la primera entrada del mapa cuyo segundo español sale del **diccionario
+global** y no de una segunda entrada, y por eso no entra en la garantía de §9.2.
+Se puede porque **ninguno de sus dos sitios es una declaración**: los dos son
+`jsx-text`, así que el marcado les pasa el archivo a los dos y el global no
+puede llegar por la ventana de atrás a ningún sitio derivado —que es justo el
+riesgo que §9.2 existe para evitar—. Ventaja de repartirlo así: si upstream
+renombra `SkillsContextualSidebar.tsx`, el encabezado cae a «Autor», o sea se
+degrada a **español**, no a inglés.
 
 ## 10. Limitaciones conocidas del corte 2
 
@@ -930,3 +983,42 @@ cuestan una línea del mapa.
   diccionario y el código, **no corriendo `markText`**: quien lo implemente
   conviene que confirme el sitio con el marcado primero, que es la lección de
   método de CHA-30.
+
+### 10.6 Tres clases que la cola de CHA-36 §6.3 agregó a esta lista (CHA-43)
+
+Las tres aparecen en la tabla de las 41 como si fueran cadenas faltantes, y
+ninguna lo es. Están acá con el motivo exacto para que la próxima medición no
+las vuelva a abrir.
+
+**a) El dato del API impreso crudo.** `working` en la lista de Agentes y
+`active` en la de Proyectos **no son literales del código**: salen de
+`StatusBadge.tsx:39` y `:57`, los dos `status.replace(/_/g, " ")` sobre el valor
+que mandó el API. No pasan por ningún sitio marcado, así que no hay entrada ni
+declaración que las alcance: es la invariante de §4 del ADR funcionando, no una
+falla. La única salida sería un mapa de etiquetas en upstream, que es un cambio
+de producto.
+
+Y conviene decirlo al revés, porque es lo que hace confusa la tabla: `idle`
+**sí** es un literal (`StatusBadge.tsx:51`, `status === "active" ? "idle" :
+status`), así que a esa le falta una declaración y nada más. Dos palabras
+pegadas en la misma pantalla, dos causas distintas.
+
+**b) La regla de la comparación §7.4, que es la que menos se ve venir.**
+`paused` en la lista de Rutinas está en `RoutineList.tsx:138`
+(`isArchived ? "archived" : isDraft ? "draft" : "paused"`), que es un hijo de JSX
+entre literales: una posición que el marcado cubre. Pero el **mismo archivo**
+compara `routine.status === "paused"` en :101 y :136, así que §7.4 bloquea la
+cadena *en ese archivo* a propósito, para que el español no llegue antes que la
+lógica. Resultado: **ni una entrada ni una declaración ni el mapa por sitio la
+arreglan** —el mapa sólo desvía sitios que ya se marcan—, y la entrada
+«en pausa» de `common.json` seguirá sin llegar ahí. `archived` está en el mismo
+caso. Es la contracara del `On` que CHA-42 sí pudo arreglar: ése está en :189, en
+mayúscula, y nadie lo compara.
+
+**c) Un literal sin nombre al que declarar.** `My Projects` está en
+`Projects.tsx:192` como elemento de un arreglo de tuplas escrito en el JSX
+(`[["My Projects", …], ["Other Projects", …]]`): no es atributo, ni clave, ni
+texto de JSX, y **no hay ninguna declaración nombrada** que envolver, así que
+`TEXT_DECLS` no la puede alcanzar. Cubrirla pide una posición nueva en la lista
+blanca —el elemento de arreglo—, que es una decisión de `text-sites.ts` y no de
+diccionario.
