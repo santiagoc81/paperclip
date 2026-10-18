@@ -227,5 +227,7 @@
   "A run is active now": "Hay una ejecución activa ahora",
   "No active run": "No hay ninguna ejecución activa",
   "Scheduled": "Programada",
-  "Run manually or wait for a trigger": "Ejecutala a mano o esperá un disparador"
+  "Run manually or wait for a trigger": "Ejecutala a mano o esperá un disparador",
+
+  "Delivery": "Entrega"
 }

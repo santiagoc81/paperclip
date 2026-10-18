@@ -324,5 +324,10 @@
   "Connect an agent identity from Connectors.": "Conectá una identidad de agente desde Conectores.",
   "Assign {0} a Task": "Asignarle una tarea a {0}",
   "The weekly schedule is enabled and can create background work.": "La programación semanal está activada y puede crear trabajo en segundo plano.",
-  "Nothing runs until you enable the weekly schedule — it costs zero tokens by default.": "No corre nada hasta que actives la programación semanal: por defecto no gasta ni un token."
+  "Nothing runs until you enable the weekly schedule — it costs zero tokens by default.": "No corre nada hasta que actives la programación semanal: por defecto no gasta ni un token.",
+
+  "API Keys": "API keys",
+  "Governance": "Gobernanza",
+  "Loading audit links…": "Cargando los enlaces de auditoría…",
+  "Permissions / Trust": "Permisos / Confianza"
 }

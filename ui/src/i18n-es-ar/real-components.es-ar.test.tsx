@@ -181,6 +181,75 @@ describe.runIf(withOverlay)("lo que el plugin marca en upstream sí se traduce",
   });
 });
 
+/**
+ * La cola de §6.3 de CHA-36, medida sobre el **módulo real** y no sobre el
+ * diccionario (CHA-43).
+ *
+ * `agent-detail-navigation.ts` es el caso ideal para afirmarlo: es un módulo
+ * plano —ni JSX ni hooks ni contexto—, así que importarlo con el plugin puesto
+ * da los valores ya marcados. Las seis etiquetas de abajo son exactamente lo
+ * que el dueño lee en la barra lateral de la ficha de agente, y cinco de las
+ * seis entraron en esta tarea.
+ */
+describe.runIf(withOverlay)("la ficha de agente: la cola de CHA-36 §6.3 (CHA-43)", () => {
+  async function navegacion() {
+    const mod = await import("@/pages/agent-detail-navigation");
+    const porEtiqueta = new Map<string, string[]>();
+    for (const grupo of mod.AGENT_DETAIL_NAVIGATION) {
+      porEtiqueta.set(grupo.label, grupo.items.map((item) => item.label));
+    }
+    return porEtiqueta;
+  }
+
+  it("los encabezados de grupo salen en español, incluido «Gobernanza»", async () => {
+    await load();
+    const grupos = [...(await navegacion()).keys()];
+    // «GOBERNANZA» en pantalla: el `uppercase` es CSS, la cadena es `Governance`.
+    expect(grupos).toEqual(["Agente", "Tiempo de ejecución", "Gobernanza"]);
+  });
+
+  it("«Overview», «Tools», «Permissions / Trust» y «API Keys» ya no quedan en inglés", async () => {
+    await load();
+    const grupos = await navegacion();
+    expect(grupos.get("Agente")).toContain("Resumen");
+    expect(grupos.get("Tiempo de ejecución")).toContain("Herramientas");
+    expect(grupos.get("Gobernanza")).toEqual([
+      "Permisos / Confianza",
+      "API keys",
+      "Revisiones",
+    ]);
+  });
+
+  it("`Skills` sigue en inglés, que es la decisión del glosario y no un olvido", async () => {
+    await load();
+    // Glosario §CHA-31: «Skill / Skills» queda en inglés (femenino: «la skill»).
+    // Por eso el encabezado de la pantalla Skills se lee `SKILLS` y está bien.
+    expect((await navegacion()).get("Agente")).toContain("Skills");
+  });
+});
+
+/**
+ * Los dos mapas de etiquetas que esta tarea **no** pudo arreglar, afirmados en
+ * inglés a propósito: les falta una línea en `TEXT_DECLS` que es del Dev, no
+ * mía. El test es el recordatorio —cuando la declaración entre, estos dos se
+ * dan vuelta y hay que venir acá.
+ */
+describe.runIf(withOverlay)("lo que todavía le falta al Dev (CHA-43)", () => {
+  it("los agrupadores de fecha de Tareas y Bandeja siguen en inglés", async () => {
+    await load();
+    // `lib/task-date-groups.ts:3` es un mapa indexado por valor técnico, igual
+    // que `EFFORT_LABELS`, pero su nombre no está declarado.
+    const mod = await import("@/lib/task-date-groups");
+    expect(mod.taskDateGroupLabels.yesterday).toBe("Yesterday");
+  });
+
+  it("el orden de la Búsqueda sigue en inglés", async () => {
+    await load();
+    const mod = await import("@/lib/search-filters");
+    expect(mod.SORT_LABELS.relevance).toBe("Relevance");
+  });
+});
+
 describe.runIf(withOverlay)("StatusIcon — el menú de estado y el tablero (T2, §10.5)", () => {
   /**
    * `statusLabel(status)` de `StatusIcon.tsx:10` arma `"In Progress"` con dos

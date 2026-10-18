@@ -62,7 +62,24 @@ const HOMOGRAFOS = [
  */
 const POR_ANCHO = ["Archived", "Off", "On"] as const;
 
-const CADENAS = [...HOMOGRAFOS, ...POR_ANCHO] as const;
+/**
+ * El homógrafo que encontró CHA-43 midiendo la cola de §6.3 de CHA-36.
+ *
+ * `Author` tiene dos sentidos en dos archivos: en
+ * `SkillsContextualSidebar.tsx:61` rotula la **sección** de las skills propias
+ * («Author / Skills you create, edit, and test. / My Skills»), así que es la
+ * acción de crearlas; en `PluginSettings.tsx:208` rotula el dato `plugin.
+ * manifestJson.author`, o sea la **persona**.
+ *
+ * Es la primera entrada del mapa cuyo segundo español sale del **diccionario
+ * global** y no de una segunda entrada: «Autor» es el sentido común del
+ * sustantivo inglés y queda global, y el mapa sólo desvía el sitio de la barra
+ * lateral. Si upstream renombra ese archivo, el encabezado cae a «Autor»: se
+ * degrada a español, no a inglés.
+ */
+const HOMOGRAFOS_CHA43 = ["Author"] as const;
+
+const CADENAS = [...HOMOGRAFOS, ...POR_ANCHO, ...HOMOGRAFOS_CHA43] as const;
 
 /**
  * Una fila por cadena: el mismo inglés, dos archivos, dos españoles.
@@ -138,7 +155,14 @@ describe("el mismo inglés, dos españoles según el archivo (§14.2)", () => {
     });
   }
 
-  it("cubre las 11 cadenas y ninguna más", () => {
+  it("«Author»: «Autoría» la sección de Skills, «Autor» la persona (CHA-43)", () => {
+    expect(lookupPorSitio("Author", "components/SkillsContextualSidebar.tsx")).toBe("Autoría");
+    // El segundo sentido no necesita entrada: lo da el diccionario global.
+    expect(lookupPorSitio("Author", "pages/PluginSettings.tsx")).toBe("Autor");
+    expect(lookup("Author")).toBe("Autor");
+  });
+
+  it("cubre las 12 cadenas y ninguna más", () => {
     const cubiertas = new Set<string>();
     for (const porIngles of entradasPorSitio("es-AR").values()) {
       for (const ingles of porIngles.keys()) cubiertas.add(ingles);
@@ -231,10 +255,18 @@ describe("la garantía del dueño: por qué estas 7 no van al diccionario global
    * en 48 px, y el español global de `Off` y de `Archived` tiene que seguir
    * existiendo —sacarlo los dejaría en inglés en toda la app para arreglar una
    * sola columna—.
+   *
+   * `Author` (CHA-43) es la tercera clase, y la razón es la de arriba leída al
+   * revés: **ninguno de sus sitios es una declaración**. Los dos que hay son
+   * `jsx-text` (`SkillsContextualSidebar.tsx:61` y `PluginSettings.tsx:208`),
+   * así que el marcado les pasa el archivo a los dos y el global no puede
+   * llegar por la ventana de atrás a ningún sitio derivado. Con eso, el sentido
+   * común —la persona— puede vivir en el global y el mapa desvía nada más que
+   * la sección de Skills.
    */
-  const CON_GLOBAL_A_PROPOSITO = new Set(["Review", ...POR_ANCHO]);
+  const CON_GLOBAL_A_PROPOSITO = new Set(["Review", ...POR_ANCHO, ...HOMOGRAFOS_CHA43]);
 
-  it("ninguna de las 7 tiene entrada en el diccionario global", () => {
+  it("ninguna de las 8 tiene entrada en el diccionario global", () => {
     for (const ingles of CADENAS) {
       if (CON_GLOBAL_A_PROPOSITO.has(ingles)) continue;
       expect(lookup(ingles), `${ingles} no puede estar en el diccionario global`).toBe(ingles);

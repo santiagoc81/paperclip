@@ -596,5 +596,10 @@
   "paused": "en pausa",
   "result": "resultado",
   "results": "resultados",
-  "running": "en curso"
+  "running": "en curso",
+
+  "Author": "Autor",
+  "Overview": "Resumen",
+  "Succeeded": "Salió bien",
+  "Tools": "Herramientas"
 }
